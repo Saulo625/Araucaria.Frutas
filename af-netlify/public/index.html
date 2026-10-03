@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; connect-src 'none'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>Araucária Frutas</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="loader" aria-hidden="true">
+  <div style="position:relative">
+    <div class="glow"></div>
+    <img class="logo" src="imagens/logo.png" alt="Araucária Frutas">
+    <h1 id="ldTitle">Araucária Frutas</h1>
+    <p>Qualidade que vem da natureza.</p>
+    <div class="bar"><i></i></div>
+  </div>
+</div>
+
+<header>
+  <div class="wrap hd">
+    <a class="brand" href="#inicio"><img class="logo" src="imagens/logo.png" alt="Araucária Frutas"><span><b>Araucária Frutas</b><small>Qualidade que vem da natureza.</small></span></a>
+    <button id="burger" aria-label="Abrir menu">☰</button>
+    <nav id="nav">
+      <a href="#inicio" data-v="inicio">Início</a>
+      <a href="#produtos" data-v="produtos">Produtos</a>
+      <a href="#perguntas" data-v="perguntas">Perguntas frequentes</a>
+      <a href="#contato" data-v="contato">Contato</a>
+    </nav>
+    <a class="cartlink" href="#carrinho" data-v="carrinho" aria-label="Carrinho">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h3l2.6 12.4a1 1 0 0 0 1 .8h9.3a1 1 0 0 0 1-.8L21 7H6"/><circle cx="9.5" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/></svg>
+      <span id="badge">0</span>
+    </a>
+  </div>
+</header>
+
+<main>
+  <!-- INÍCIO -->
+  <section class="view" id="v-inicio" style="padding-top:0">
+    <div class="hero"><div class="wrap">
+      <div class="hero-text">
+        <h2>Frutas frescas,<br>selecionadas para você.</h2>
+        <p>Frutas frescas e selecionadas, com qualidade e sabor para deixar seus momentos ainda mais especiais.</p>
+        <a class="btn" href="#produtos" style="display:inline-block">Ver produtos ›</a>
+      </div>
+      <div class="heroimg" aria-hidden="true"><img id="h1" alt=""><img id="h2" alt=""></div>
+    </div></div>
+    <div class="wrap">
+      <div class="notice">Atenção: faça seu pedido com antecedência para garantir a disponibilidade.</div>
+      <h2 class="title" style="margin-top:34px">Mais Vendidos</h2>
+      <div class="grid4" id="best"></div>
+    </div>
+  </section>
+
+  <!-- PRODUTOS -->
+  <section class="view" id="v-produtos"><div class="wrap">
+    <h2 class="title">Nossos produtos</h2>
+    <div class="warn">⚠ Algumas frutas podem estar indisponíveis e/ou ter alteração de preço.</div>
+    <div class="grid" id="grid"></div>
+  </div></section>
+
+  <!-- FAQ -->
+  <section class="view" id="v-perguntas"><div class="wrap">
+    <h2 class="title">Perguntas frequentes</h2>
+    <p class="sub">Tire suas dúvidas antes de escolher suas frutas.</p>
+    <div class="two">
+      <div id="faq"></div>
+      <aside class="info">
+        <h3>Informações importantes</h3>
+        <h4>ATENDIMENTO • WHATSAPP</h4><p>Segunda, quarta e sexta<br>8h às 12h</p>
+        <h4>ENTREGAS</h4><p>Terça e quinta • 8h às 20h<br>Sábado • 8h às 16h</p>
+        <h4>PAGAMENTO</h4><p>PIX sem acréscimo. Crédito e débito têm acréscimo referente à taxa da maquininha.</p>
+      </aside>
+    </div>
+  </div></section>
+
+  <!-- CONTATO -->
+  <section class="view" id="v-contato"><div class="wrap">
+    <h2 class="title">Fale com a gente</h2>
+    <p class="sub">Estamos prontos para te atender!</p>
+    <div class="cgrid">
+      <a class="ct" href="https://wa.me/5511986423341" target="_blank" rel="noopener"><b>WhatsApp</b><div><strong>(11) 98642-3341</strong><span>Clique no número para falar conosco.</span></div></a>
+      <a class="ct" href="https://www.instagram.com/araucariafrutas_?stkn=YTE2MnhoMDg5NWhk" target="_blank" rel="noopener"><b>Instagram</b><div><strong>@araucariafrutas_</strong><span>Acompanhe nossas novidades!</span></div></a>
+      <a class="ct" href="https://wa.me/5511989421345" target="_blank" rel="noopener"><b>WhatsApp</b><div><strong>(11) 98942-1345</strong><span>Segunda, quarta e sexta<br>8h às 12h</span></div></a>
+      <a class="ct" href="mailto:pedrohenriquedesouzas417@gmail.com"><b>E-mail</b><div><strong>pedrohenriquedesouzas417@gmail.com</strong><span>Respondemos em até 24h.</span></div></a>
+    </div>
+  </div></section>
+
+  <!-- CARRINHO -->
+  <section class="view" id="v-carrinho"><div class="wrap">
+    <h2 class="title">Carrinho</h2>
+    <div class="cart-wrap">
+      <div id="items"></div>
+      <aside class="sum">
+        <h3>Resumo da compra</h3>
+        <div class="in">
+          <div id="lines"></div>
+          <div class="tot"><span>Total</span><b id="total">R$ 0,00</b></div>
+          <a class="btn off" id="buy" href="#" target="_blank" rel="noopener noreferrer">Continuar pelo WhatsApp</a>
+        </div>
+      </aside>
+    </div>
+  </div></section>
+</main>
+
+<footer>
+  <div class="wrap ft">
+    <div><img class="logo" src="imagens/logo.png" alt="Araucária Frutas"><span><b class="n">Araucária<br>Frutas</b><small>Qualidade que vem da natureza.</small></span></div>
+    <div>Instagram &nbsp;@araucariafrutas_<br>Telefone (11) <b>98942-1345</b><br>E-mail &nbsp;pedrohenriquedesouzas417@gmail.com</div>
+    <div><b>Formas de pagamento</b><br>◆ PIX &nbsp; ▭ Cartão de crédito &nbsp; ▭ Cartão de débito<br><span class="note">Crédito e débito: acréscimo da taxa da maquininha.</span></div>
+  </div>
+
+  <p class="copyright">
+      © <span id="anoAtual"></span> Araucária Frutas — Pedro Henrique. Todos os direitos reservados.
+      <span class="footer-credit"><a
+          href="https://wa.me/5511932958618?text=Olá%20Saulo,%20vi%20o%20site%20e%20gostaria%20de%20solicitar%20um%20orçamento."
+          target="_blank" rel="noopener">Desenvolvido por Saulo Menezes</a></span>
+    </p>
+</footer>
+<div id="toast" role="status"></div>
+
+<script src="/api/products.js"></script>
+<script src="js/script.js"></script>
+</body>
+</html>
