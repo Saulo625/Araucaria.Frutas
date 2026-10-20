@@ -159,3 +159,12 @@ footer{background:#0a3622;color:#fff;margin-top:auto}
  .ct{flex-direction:column;align-items:flex-start;gap:8px}
  .wrap{padding:0 14px}
 }
+
+/* delivery */
+.dlv{background:var(--card);border:1px solid var(--line);border-radius:28px;box-shadow:0 3px 10px #0002;padding:30px;max-width:560px}
+.dlv-item{margin-bottom:26px}
+.dlv-item h3{font-family:Arial,sans-serif;font-size:1.25rem;color:var(--head);margin:0 0 6px}
+.dlv-item p{margin:0;line-height:1.6;font-size:1.05rem}
+.dlv-note{margin:0 0 14px;color:var(--muted);line-height:1.6;font-size:1.05rem}
+.dlv-warn{font-family:Arial,sans-serif;font-size:1.25rem;color:#b10000;margin:0 0 10px}
+@media(max-width:520px){.dlv{padding:20px;border-radius:22px}}
