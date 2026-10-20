@@ -1,0 +1,22 @@
+{
+  "name": "araucaria-frutas",
+  "version": "3.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Araucária Frutas – site + painel administrativo (Netlify)",
+  "scripts": {
+    "test": "node test/test.mjs",
+    "restaurar-excluidos": "node scripts/restaurar-excluidos.mjs"
+  },
+  "engines": {
+    "node": ">=20.12.2"
+  },
+  "dependencies": {
+    "@netlify/blobs": "^11.1.3",
+    "@netlify/database": "^2.0.1"
+  },
+  "devDependencies": {
+    "@netlify/database-dev": "^1.0.1",
+    "pg": "^8.23.1"
+  }
+}
