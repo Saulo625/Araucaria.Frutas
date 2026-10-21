@@ -57,7 +57,7 @@ export default {
    ],
    "op": [
     {
-     "l": "6 unidades",
+     "l": "500g",
      "p": 5.99
     }
    ]

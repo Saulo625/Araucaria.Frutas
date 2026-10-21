@@ -1,0 +1,1 @@
+UPDATE opcoes SET rotulo = '500g' WHERE produto_id = 'limao' AND ordem = 0;
