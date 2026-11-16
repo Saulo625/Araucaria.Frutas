@@ -155,11 +155,22 @@ async function alterar(req, id, { db, store }) {
   if (!linhas.length || linhas.length > 8 || linhas.some(l => l.length > 200)) return erro('Os detalhes devem ter de 1 a 8 linhas, com até 200 caracteres cada.');
   let precos; try { precos = JSON.parse(String(form.get('precos') || '{}')); } catch { return erro('Preços inválidos.'); }
   if (!precos || typeof precos !== 'object' || Object.keys(precos).length !== prod.opcoes.length) return erro('Opções inválidas para este produto.');
+  // peso/quantidade de cada opção (ex.: "300g", "1 unidade"); campo opcional: se não vier, o texto atual é mantido
+  let rotulos = null;
+  if (form.has('rotulos')) {
+    try { rotulos = JSON.parse(String(form.get('rotulos'))); } catch { return erro('Peso/quantidade inválido.'); }
+    if (!rotulos || typeof rotulos !== 'object' || Object.keys(rotulos).length !== prod.opcoes.length) return erro('Opções inválidas para este produto.');
+  }
   const novos = [];
   for (const o of prod.opcoes) {
     const c = precoParaCentavos(precos[o.id]);
     if (c == null) return erro(`Preço inválido em "${o.rotulo}". Use um valor como 17,00.`);
-    novos.push({ id: o.id, c, img: null });
+    let r = null;
+    if (rotulos) {
+      r = String(rotulos[o.id] ?? '').trim().replace(/\s+/g, ' ');
+      if (r.length < 1 || r.length > 40) return erro('Informe o peso ou a quantidade de cada opção (ex.: 300g ou 1 unidade), com até 40 caracteres.');
+    }
+    novos.push({ id: o.id, c, img: null, r });
   }
   const envios = []; // {alvo, nome, bytes}
   for (const [campo, f] of form.entries()) {
@@ -198,8 +209,8 @@ async function alterar(req, id, { db, store }) {
   try {
     await db.sql`
       WITH p AS (UPDATE produtos SET nome = ${nome}, descricao = ${linhas.join('\n')}, imagem = ${imgProduto ? 'uploads/' + imgProduto.nome : prod.imagem} WHERE id = ${prod.id} RETURNING id)
-      UPDATE opcoes o SET preco_centavos = v.c, imagem = COALESCE(v.img, o.imagem)
-      FROM jsonb_to_recordset(${JSON.stringify(novos)}::jsonb) AS v(id int, c int, img text)
+      UPDATE opcoes o SET preco_centavos = v.c, imagem = COALESCE(v.img, o.imagem), rotulo = COALESCE(v.r, o.rotulo)
+      FROM jsonb_to_recordset(${JSON.stringify(novos)}::jsonb) AS v(id int, c int, img text, r text)
       WHERE o.id = v.id AND o.produto_id = ${prod.id}`;
   } catch (e) {
     console.error(e); await apagaFotos(store, gravadas.map(n => 'uploads/' + n));

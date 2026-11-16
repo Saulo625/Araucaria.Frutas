@@ -97,7 +97,7 @@ function abreEditar(id) {
   const opImgs = $('#eOpImgs'); opImgs.replaceChildren();
   for (const o of p.opcoes) {
     precos.append(el('div', { className: 'preco-linha' },
-      el('label', { className: 'r', htmlFor: 'preco' + o.id, textContent: o.rotulo }),
+      el('input', { type: 'text', id: 'rotulo' + o.id, className: 'r', value: o.rotulo, maxLength: 40, required: true, autocomplete: 'off', placeholder: 'Ex.: 300g ou 1 unidade', title: 'Peso ou quantidade desta opção', 'aria-label': 'Peso ou quantidade da opção' }),
       el('div', { className: 'm' }, el('span', { textContent: 'R$' }),
         el('input', { type: 'text', id: 'preco' + o.id, inputMode: 'decimal', value: emReais(o.preco_centavos), required: true, autocomplete: 'off' }))));
     if (o.imagem) { // opções que já têm foto própria (ex.: Jabuticaba)
@@ -123,11 +123,13 @@ $('#fEditar').addEventListener('submit', async e => {
   await Promise.allSettled([...pendentes]); // garante que a foto escolhida já está pronta
   if ($('#eMsg').textContent) { btn.disabled = false; btn.textContent = 'Salvar alterações'; return; } // erro ao preparar a foto
   const precos = {};
-  for (const o of editando.opcoes) precos[o.id] = $('#preco' + o.id).value;
+  const rotulos = {};
+  for (const o of editando.opcoes) { precos[o.id] = $('#preco' + o.id).value; rotulos[o.id] = $('#rotulo' + o.id).value; }
   const fd = new FormData();
   fd.append('nome', $('#eNome').value);
   fd.append('descricao', $('#eDesc').value);
   fd.append('precos', JSON.stringify(precos));
+  fd.append('rotulos', JSON.stringify(rotulos));
   if (arquivos.produto) fd.append('imagem', arquivos.produto);
   for (const o of editando.opcoes) if (arquivos[o.id]) fd.append('imagem_opcao_' + o.id, arquivos[o.id]);
   try {

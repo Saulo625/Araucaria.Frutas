@@ -34,7 +34,14 @@ const IMG = {   // fotos: arquivos da pasta imagens/ (troque o arquivo ou o cami
  tamara:'imagens/tamara.jpg',
  banana:'imagens/banana.jpg',
  limao:'imagens/limao.jpg',
- nespera:'imagens/nespera.jpg'
+ nespera:'imagens/nespera.jpg',
+ Lichia:'imagens/Lichia.jpg',
+ Cereja:'imagens/Cereja.png',
+ MelanciaAmarela:'imagens/Melancia-Amarela.png',
+ Pessego:'imagens/Pessego.png',
+ Nectarina:'imagens/Nectarina.png',
+ Ameixa_Espanha :'imagens/Ameixa.png',
+
 };
 
 /* Produtos agora vêm do banco de dados (api/products.js, carregado antes deste arquivo).
