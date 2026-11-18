@@ -127,32 +127,7 @@ Ideal para lancheira e sobremesa – praticidade','imagens/uva_thompson.jpg',NUL
 ('uva_vitoria','Uva Vitória Sem Semente (CAJ Gold)','Uva Vitória doce intensa e crocante – sem sementes
 Rica em antioxidantes (resveratrol) – beleza e longevidade
 Fonte de vitaminas, ferro e fibras – energia natural
-Ideal para lancheira e sobremesa – praticidade total','imagens/uva_vitoria.jpg',NULL,NULL,31),
-('Lichia','Lichia','Fruta tropical de sabor intenso e aroma agradável
-Rica em vitamina C e antioxidantes
-Fonte de fibras e potássio
-Ideal para lancheira e sobremesa – praticidade total','imagens/Lichia.jpg',NULL,NULL,32),
-('Cereja','Cereja','Fruta vermelha e suculenta de sabor intenso
-Rica em antioxidantes e vitamina C
-Fonte de fibras e potássio
-Ideal para lancheira e sobremesa – praticidade total','imagens/Cereja.png',NULL,NULL,33),
-('MelanciaAmarela','Melancia Amarela','Fruta refrescante e suculenta de sabor intenso
-Rica em vitamina C e antioxidantes
-Fonte de fibras e potássio
-Ideal para lancheira e sobremesa – praticidade total','imagens/Melancia-Amarela.png',NULL,NULL,34),
-('Pessego kampai nacional','Pessego kampai nacional','Fruta suculenta e saborosa de sabor intenso
-Rica em vitamina C e antioxidantes
-Fonte de fibras e potássio
-Ideal para lancheira e sobremesa – praticidade total','imagens/Pessego.png',NULL,NULL,35),
-('Nectarina nacional ','Nectarina nacional ','Fruta suculenta e saborosa de sabor intenso
-Rica em vitamina C e antioxidantes
-Fonte de fibras e potássio
-Ideal para lancheira e sobremesa – praticidade total','imagens/Nectarina.png',NULL,NULL,36),
-('Ameixa da Espanha ','Ameixa da Espanha ','Fruta suculenta e saborosa de sabor intenso
-Rica em vitamina C e antioxidantes
-Fonte de fibras e potássio
-Ideal para lancheira e sobremesa – praticidade total','imagens/Ameixa.png',NULL,NULL,37);
-
+Ideal para lancheira e sobremesa – praticidade total','imagens/uva_vitoria.jpg',NULL,NULL,31);
 
 INSERT INTO opcoes (produto_id,rotulo,preco_centavos,imagem,ordem) VALUES
 ('morango','1 cumbuca (250g)',1500,NULL,0),
@@ -183,7 +158,7 @@ INSERT INTO opcoes (produto_id,rotulo,preco_centavos,imagem,ordem) VALUES
 ('melancia','1 unidade',2499,NULL,0),
 ('melancia','Fatiada',2699,NULL,1),
 ('melao','1 unidade',1799,NULL,0),
-('melao','1/2',1999,NULL,1),
+('melao','Fatiado',1999,NULL,1),
 ('nespera','450g',2999,NULL,0),
 ('nozes','350g',2999,NULL,0),
 ('pessego','2 unidades',899,NULL,0),
@@ -193,11 +168,4 @@ INSERT INTO opcoes (produto_id,rotulo,preco_centavos,imagem,ordem) VALUES
 ('tamara','200g',1999,NULL,0),
 ('uva_cotton_candy','500g (1 cumbuca)',2499,NULL,0),
 ('uva_thompson','1 cumbuca',1399,NULL,0),
-('uva_vitoria','1 cumbuca',1299,NULL,0),
-('Lichia','1 bandeja',4499,NULL,0),
-('Cereja','1 bandeja',1899,NULL,0),
-('MelanciaAmarela','1 unidade',3999,NULL,0),
-('MelanciaAmarela','1/2',1899,NULL,1),
-('Pessego kampai nacional','500g',999,NULL,0),
-('Nectarina nacional ','500g',1499,NULL,0),
-('Ameixa da Espanha ','500g',1399,NULL,0);
+('uva_vitoria','1 cumbuca',1299,NULL,0);
