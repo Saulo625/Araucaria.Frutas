@@ -41,7 +41,11 @@ const IMG = {   // fotos: arquivos da pasta imagens/ (troque o arquivo ou o cami
  Pessego:'imagens/Pessego.png',
  Nectarina:'imagens/Nectarina.png',
  Ameixa_Espanha :'imagens/Ameixa.png',
-
+ Caqui:'imagens/Caqui.jpg',
+ Amora:'imagens/Amora.jpg',
+ Framboesa:'imagens/Framboesa.jpg',
+ Pitaya:'imagens/PitayaColombiana.jpg',
+ Mel:'imagens/Mel.jpg',
 };
 
 /* Produtos agora vêm do banco de dados (api/products.js, carregado antes deste arquivo).
