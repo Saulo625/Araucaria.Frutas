@@ -138,12 +138,17 @@ function precoParaCentavos(v) {
   const c = Math.round(parseFloat(s) * 100);
   return c >= 1 && c <= 999999 ? c : null;
 }
+// Os ids dos produtos antigos são "maca", "uva_gota_mel"..., mas os cadastrados depois têm ids como
+// "Amora berry good", "MelanciaAmarela" ou "Mel " (maiúsculas, espaços, até espaço no fim).
+// Por isso aqui só barramos lixo (vazio, longo demais, caractere de controle); quem decide se o produto
+// existe é a busca exata no banco (umProduto), e o id sempre vai ao SQL como parâmetro.
+const idValido = id => typeof id === 'string' && id.length >= 1 && id.length <= 100 && !/[\u0000-\u001f\u007f]/.test(id);
 const nomeBlob = rel => (typeof rel === 'string' && /^uploads\/[0-9a-f]{24}\.(jpg|png|webp)$/.test(rel)) ? rel.slice(8) : null;
 const apagaFotos = (store, rels) => Promise.all(rels.map(nomeBlob).filter(Boolean).map(n => store.delete(n).catch(e => console.error('apagar foto', e))));
 
 /* ====================== API do painel ====================== */
 async function alterar(req, id, { db, store }) {
-  const prod = /^[a-z0-9_]{1,60}$/.test(id) ? await umProduto(db, id) : null;
+  const prod = idValido(id) ? await umProduto(db, id) : null;
   if (!prod) return erro('Produto não encontrado.', 404);
   if (Number(req.headers.get('content-length') || 0) > MAX_BODY) return erro('A imagem é muito grande. Use uma foto menor.');
   let form; try { form = await req.formData(); } catch { return erro('Não foi possível receber o envio.'); }
@@ -222,7 +227,7 @@ async function alterar(req, id, { db, store }) {
 }
 
 async function excluir(id, { db, store }) {
-  const prod = /^[a-z0-9_]{1,60}$/.test(id) ? await umProduto(db, id) : null;
+  const prod = idValido(id) ? await umProduto(db, id) : null;
   if (!prod) return erro('Produto não encontrado.', 404);
   await db.sql`DELETE FROM produtos WHERE id = ${prod.id}`; // opções saem junto (ON DELETE CASCADE)
   await apagaFotos(store, [prod.imagem, ...prod.opcoes.map(o => o.imagem)]);

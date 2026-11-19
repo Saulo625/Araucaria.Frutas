@@ -19,10 +19,13 @@ const loginReq = (email, senha) => fetch(base + '/admin/api/login', { method: 'P
 try {
   // importação dos produtos existentes
   let site = await pegaSite();
-  assert.strictEqual(site.products.length, 32); assert.strictEqual(site.best.length, 8);
-  assert.deepStrictEqual(site.products, seed.products.map(p => ({ ...p })), 'site deve ser idêntico ao PRODUCTS original');
+  assert.strictEqual(site.products.length, 43); assert.strictEqual(site.best.length, 8);
+  // mudanças de negócio feitas de propósito por migração depois da importação (20261118000100): meia Melancia/Melão no lugar de "Fatiada/Fatiado"
+  const apos = { melancia: { l: '1/2 unidade', p: 12.45 }, melao: { l: '1/2 unidade', p: 9 } };
+  const esperados = seed.products.map(p => ({ ...p, op: p.op.map((o, i) => (i === 1 && apos[p.id] ? apos[p.id] : o)) }));
+  assert.deepStrictEqual(site.products.slice(0, 32), esperados, 'os 32 primeiros devem ser os do PRODUCTS original (com as 2 mudanças das migrações)');
   assert.deepStrictEqual(site.best, seed.best);
-  ok('banco entrega exatamente os 32 produtos originais (nome, desc, imagem, rótulos, preços, jabuticaba com 2 fotos)');
+  ok('banco entrega os 32 produtos originais (nome, desc, imagem, rótulos, preços, jabuticaba com 2 fotos) + 11 cadastrados depois');
 
   // proteção
   for (const [m, u] of [['GET', '/admin/api/produtos'], ['GET', '/admin/api/sessao'], ['PUT', '/admin/api/produtos/caju'], ['DELETE', '/admin/api/produtos/caju'], ['POST', '/admin/api/logout']]) {
@@ -56,8 +59,9 @@ try {
     const f = new FormData();
     f.append('nome', c.nome ?? p.nome); f.append('descricao', c.descricao ?? p.descricao);
     f.append('precos', JSON.stringify(c.precos ?? Object.fromEntries(p.opcoes.map(o => [o.id, String(o.preco_centavos / 100)]))));
+    if (c.rotulos) f.append('rotulos', JSON.stringify(c.rotulos));
     for (const [n, buf] of arqs) f.append(n, new Blob([buf]), 'x.bin');
-    return fetch(base + '/admin/api/produtos/' + id, { method: 'PUT', headers: H, body: f });
+    return fetch(base + '/admin/api/produtos/' + encodeURIComponent(id), { method: 'PUT', headers: H, body: f });
   };
   const maca = get('maca'); assert.strictEqual(maca.opcoes[0].preco_centavos, 1699);
   r = await put('maca', maca, { precos: { [maca.opcoes[0].id]: '17,00' } }); assert.strictEqual(r.status, 200);
@@ -113,15 +117,48 @@ try {
   assert.strictEqual((await put('novo_produto', caju)).status, 404);
   ok('não há como criar produto novo (POST/PUT em /produtos → 404)');
 
+  // produtos cadastrados depois pela migração: ids com maiúscula/espaço (alguns com espaço no fim).
+  // Regressão: antes davam "Produto não encontrado" ao salvar no painel.
+  const novosIds = (await pegaSite()).products.slice(32).map(p => p.id);
+  assert.strictEqual(novosIds.length, 11);
+  assert(novosIds.some(id => /\s$/.test(id)) && novosIds.some(id => /[A-Z]/.test(id)) && novosIds.some(id => / /.test(id)), 'o teste precisa cobrir ids "difíceis"');
+  const listaNova = await (await fetch(base + '/admin/api/produtos', { headers: { Cookie: C } })).json();
+  for (const id of novosIds) {
+    const p = listaNova.find(x => x.id === id);
+    const precos = Object.fromEntries(p.opcoes.map((o, i) => [o.id, `${50 + i},99`]));
+    const rotulos = Object.fromEntries(p.opcoes.map((o, i) => [o.id, `Rótulo ${i}`]));
+    r = await put(id, p, { nome: 'Editado ' + p.nome.trim(), descricao: 'linha 1\nlinha 2', precos, rotulos });
+    assert.strictEqual(r.status, 200, `alterar "${id}": ${r.status}`);
+    const s = (await pegaSite()).products.find(x => x.id === id);
+    assert.strictEqual(s.nome, 'Editado ' + p.nome.trim());
+    assert.deepStrictEqual(s.desc, ['linha 1', 'linha 2']);
+    assert.deepStrictEqual(s.op.map(o => [o.l, o.p]), p.opcoes.map((o, i) => [`Rótulo ${i}`, (5099 + 100 * i) / 100]));
+  }
+  ok('os 11 produtos novos (ids com maiúscula/espaço/espaço no fim) salvam nome, detalhes, preço e peso e aparecem no site');
+  const mel = listaNova.find(x => x.id === 'Mel ');
+  r = await put('Mel ', mel, {}, [['imagem', jpg]]); assert.strictEqual(r.status, 200);
+  assert(/^uploads\/[0-9a-f]{24}\.jpg$/.test((await r.json()).produto.imagem));
+  ok('troca de foto também funciona em produto novo ("Mel ")');
+  for (const id of ['Produto Que Nao Existe', 'x'.repeat(101), 'a\u0001b', 'mel', 'amora berry good']) // exige o id exato
+    assert.strictEqual((await put(id, caju)).status, 404, JSON.stringify(id));
+  ok('ids inexistentes, com caractere de controle, longos demais ou com maiúscula/minúscula trocada → 404');
+
   // excluir
   const n0 = store.m.size;
   assert.strictEqual((await fetch(base + '/admin/api/produtos/caju', { method: 'DELETE', headers: { Cookie: C } })).status, 403);
   assert.strictEqual((await fetch(base + '/admin/api/produtos/caju', { method: 'DELETE', headers: H })).status, 200);
-  assert.strictEqual((await pegaSite()).products.length, 31);
+  assert.strictEqual((await pegaSite()).products.length, 42);
   assert.strictEqual((await db.sql`SELECT COUNT(*)::int c FROM opcoes WHERE produto_id='caju'`)[0].c, 0);
   assert.strictEqual(store.m.size, n0 - 1);
   assert.strictEqual((await fetch(base + '/admin/api/produtos/caju', { method: 'DELETE', headers: H })).status, 404);
   ok('excluir remove produto + opções + foto enviada; some do site; exige CSRF');
+  const n1 = store.m.size;
+  assert.strictEqual((await fetch(base + '/admin/api/produtos/' + encodeURIComponent('Mel '), { method: 'DELETE', headers: H })).status, 200);
+  assert.strictEqual((await pegaSite()).products.length, 41);
+  assert.strictEqual((await db.sql`SELECT COUNT(*)::int c FROM opcoes WHERE produto_id='Mel '`)[0].c, 0);
+  assert.strictEqual(store.m.size, n1 - 1);
+  assert.strictEqual((await fetch(base + '/admin/api/produtos/' + encodeURIComponent('Mel '), { method: 'DELETE', headers: H })).status, 404);
+  ok('excluir também funciona em produto novo ("Mel ") e remove a foto enviada');
   await fetch(base + '/admin/api/produtos/uva_gota_mel', { method: 'DELETE', headers: H });
   assert.strictEqual((await pegaSite()).best.length, 7);
   ok('excluir produto de "Mais Vendidos" tira da lista sem erro');
